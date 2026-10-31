@@ -17,7 +17,7 @@ import { TraderCard } from "./TraderCard";
 import { SlidersIcon, StarIcon, SwapIcon, WarningIcon } from "../ui/icons";
 import { PeriodTabs, Skeleton } from "../ui/primitives";
 
-const FILTER_KEY = "hlpick:filters";
+const FILTER_KEY = "hlpick:filters:v2";
 const DIR_KEY = "hlpick:direction";
 const PROGRESS_KEY = "hlpick:progress";
 const PROGRESS_MAX_QUERIES = 20;

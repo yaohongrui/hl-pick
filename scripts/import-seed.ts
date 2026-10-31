@@ -4,8 +4,12 @@ import { getDb } from "../src/lib/db";
 
 const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
 
+const args = process.argv.slice(2);
+const prune = args.includes("--prune");
+const fileArg = args.find((arg) => !arg.startsWith("--"));
+
 const file =
-  process.argv[2] || process.env.SEED_FILE || path.join("data", "seed-addresses.txt");
+  fileArg || process.env.SEED_FILE || path.join("data", "seed-addresses.txt");
 
 if (!fs.existsSync(file)) {
   console.log(
@@ -66,8 +70,23 @@ const insertAll = db.transaction(() => {
 
 insertAll();
 
+let pruned = 0;
+if (prune) {
+  const keep = [...seen];
+  const notIn = keep.length ? `AND address NOT IN (${keep.map(() => "?").join(",")})` : "";
+  pruned = db
+    .prepare(
+      `DELETE FROM addresses
+        WHERE source = 'seed'
+          ${notIn}
+          AND address NOT IN (SELECT address FROM watchlist)`,
+    )
+    .run(...keep).changes;
+}
+
 console.log(`[seed] file: ${file}`);
 console.log(`[seed] imported ${valid}, duplicates ${duplicate}, comments ${commented}, invalid ${invalid.length}`);
+if (prune) console.log(`[seed] pruned ${pruned} seed addresses no longer in file`);
 if (invalid.length) {
   console.log("[seed] invalid lines (first 20):");
   for (const row of invalid.slice(0, 20)) {

@@ -62,7 +62,7 @@ export const SOURCE_LABEL: Record<SourceKey, string> = {
 export const DEFAULTS = {
   period: "month" as Period,
   sort: "roi" as SortKey,
-  source: "all" as SourceKey,
+  source: "seed" as SourceKey,
   minEquity: 10_000,
   minVol: 500_000,
 };
