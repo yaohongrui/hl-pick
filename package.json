@@ -1,0 +1,35 @@
+{
+  "name": "hl-pick",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3005",
+    "build": "next build && node scripts/prepare-standalone.mjs",
+    "start": "next start -p 3005",
+    "start:standalone": "node .next/standalone/server.js",
+    "worker": "HL_WEIGHT_CAP_PER_MIN=400 AUTO_HOLDING=0 tsx src/worker/index.ts",
+    "sync": "tsx scripts/sync-leaderboard.ts",
+    "import:seed": "tsx scripts/import-seed.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "lightweight-charts": "^4.2.3",
+    "next": "15.5.28",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "swr": "^2.5.1",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

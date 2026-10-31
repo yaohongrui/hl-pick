@@ -1,0 +1,38 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        BASE_PATH: /add-pick
+    image: hl-pick:latest
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /data
+      BASE_PATH: /add-pick
+      NEXT_PUBLIC_BASE_PATH: /add-pick
+      HL_WEIGHT_CAP_PER_MIN: "700"
+      INBOUND_RATE_LIMIT: "90"
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    volumes:
+      - hl_data:/data
+    ports:
+      - "127.0.0.1:3005:3000"
+
+  worker:
+    image: hl-pick:latest
+    restart: unless-stopped
+    command: ["npm", "run", "worker"]
+    environment:
+      DATA_DIR: /data
+      HL_WEIGHT_CAP_PER_MIN: "400"
+      AUTO_HOLDING: "0"
+      WARM_TOP: "200"
+      SNAPSHOT_TOP: "300"
+    volumes:
+      - hl_data:/data
+    depends_on:
+      - web
+
+volumes:
+  hl_data:
